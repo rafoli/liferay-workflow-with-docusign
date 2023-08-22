@@ -2,5 +2,3 @@ Bundle-Name: docusign-workflow-integration-api
 Bundle-SymbolicName: com.liferay.sample.docusign.workflow.integration.api
 Bundle-Version: 1.0.0
 Export-Package: com.liferay.sample.docusign.workflow.integration.service
--check: EXPORTS
--includeresource: META-INF/service.xml=../docusign-workflow-integration-service/service.xml
