@@ -1,0 +1,4 @@
+Bundle-Name: docusign-workflow-configuration
+Bundle-SymbolicName: com.liferay.sample.docusign.workflow.configuration
+Bundle-Version: 1.0.0
+Export-Package: com.liferay.sample.docusign.workflow.configuration
