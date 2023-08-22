@@ -1,0 +1,12 @@
+dependencies {
+	compileOnly group: "com.liferay.portal", name: "release.dxp.api"
+
+	compileOnly project(":modules:docusign-workflow-integration-api")
+	compileOnly project(":modules:docusign-workflow-configuration")
+}
+
+buildService {
+	apiDir = "../docusign-workflow-integration-api/src/main/java"
+}
+
+group = "com.liferay.sample.docusign.workflow.integration"
