@@ -1,0 +1,16 @@
+assemble:
+    - from: batch
+      into: batch
+onboarding-with-docusign-batch-oauth-application-headless-server:
+    .serviceAddress: localhost:8080
+    .serviceScheme: http
+    name: Onboarding with DocuSign OAuth Application Headless Server
+    scopes:
+        - Liferay.Headless.Admin.Workflow.everything
+        - Liferay.Headless.Batch.Engine.everything
+    type: oAuthApplicationHeadlessServer
+    userAccountScreenName: default-service-account
+onboarding-with-docusign-batch:
+    name: Liferay Sample Onboarding with DocuSign Batch
+    oAuthApplicationHeadlessServer: onboarding-with-docusign-batch-oauth-application-headless-server
+    type: batch
