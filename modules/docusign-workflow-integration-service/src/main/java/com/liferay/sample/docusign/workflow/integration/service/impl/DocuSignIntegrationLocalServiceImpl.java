@@ -127,6 +127,8 @@ public class DocuSignIntegrationLocalServiceImpl
 			_log.debug("populateJSONFieldValues start");
 		}
 
+		// Fill out PDF template based on the form fields, and
+		// add signature request
 		docuSignTabs = _docuSignService.populateJSONFieldValues(
 				docuSignTabs, acceptFieldReferences,
 				record.getFormInstanceRecordId());
@@ -137,7 +139,7 @@ public class DocuSignIntegrationLocalServiceImpl
 			_log.debug("sender email: " + _docuSignService.getSystemSenderEmail());
 		}
 
-
+		// Send an DocuSign request by email
 		DSEnvelope dsEnvelope = _docuSignService.sendDSEnvelope(
 				envelopeEmailMessage, envelopeEmailSubject, envelopeName,
 				_docuSignService.getSystemSenderEmail(), templateFile, user,
