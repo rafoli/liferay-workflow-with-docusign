@@ -1,0 +1,36 @@
+buildscript {
+	dependencies {
+		classpath group: "com.liferay", name: "com.liferay.gradle.plugins.defaults", version: "10.0.14"
+		classpath group: "org.springframework.boot", name: "spring-boot-gradle-plugin", version: "2.7.9"
+	}
+
+	repositories {
+		mavenLocal()
+
+		maven {
+			url "https://repository-cdn.liferay.com/nexus/content/groups/public"
+		}
+	}
+}
+
+apply plugin: "com.liferay.source.formatter"
+apply plugin: "java"
+apply plugin: "org.springframework.boot"
+
+dependencies {
+	implementation group: "com.liferay", name: "com.liferay.client.extension.util.spring.boot", version: "1.0.9"
+	implementation group: "commons-logging", name: "commons-logging", version: "1.2"
+	implementation group: "net.datafaker", name: "datafaker", version: "1.9.0"
+	implementation group: "org.json", name: "json", version: "20230227"
+	implementation group: "org.springframework.boot", name: "spring-boot-starter-oauth2-resource-server", version: "2.7.9"
+	implementation group: "org.springframework.boot", name: "spring-boot-starter-web", version: "2.7.9"
+	implementation group: "org.springframework.boot", name: "spring-boot-starter-webflux", version: "2.7.9"
+}
+
+repositories {
+	mavenLocal()
+
+	maven {
+		url "https://repository-cdn.liferay.com/nexus/content/groups/public"
+	}
+}
