@@ -62,12 +62,12 @@ public class DocuSignWorkflowActionRestController extends BaseRestController {
 
 		webClient.post(
 		).uri(
-				"o/digital-signature-rest/v1.0/sites/35040/ds-envelopes"
+				"o/digital-signature-rest/v1.0/sites/35231/ds-envelopes"
 		).bodyValue(
 				"{ " +
 						"\"dsDocument\": [" +
 						" { " +
-						"\"fileEntryExternalReferenceCode\": \"edd426b6-0aa3-ceae-ab87-a7a01baa3fd6\"," +
+						"\"fileEntryExternalReferenceCode\": \"7c2f020a-61e2-c86c-9fb6-6f2cd8966351\"," +
 						" \"transformPDFFields\": false," +
 						" \"fileExtension\": \"\"," +
 						" \"name\": \"onboarding-application.pdf\"," +
@@ -80,7 +80,43 @@ public class DocuSignWorkflowActionRestController extends BaseRestController {
 						" \"emailAddress\": \"rafael.oliveira+test@liferay.com\"," +
 						" \"name\": \"Test Test\"," +
 						" \"id\": \"1\"," +
-						" \"tabs\": {}," +
+						" \"tabs\": {\n" +
+						"              \"signHereTabs\": [\n" +
+						"                {\n" +
+						"                  \"anchorXOffset\": \"-30\",\n" +
+						"                  \"anchorString\": \"Sign here\",\n" +
+						"                  \"anchorYOffset\": \"-30\",\n" +
+						"                  \"anchorIgnoreIfNotPresent\": \"false\",\n" +
+						"                  \"anchorUnits\": \"pixels\"\n" +
+						"                }\n" +
+						"              ],\n" +
+						"              \"textTabs\": [\n" +
+						"                {\n" +
+						"                  \"anchorXOffset\": \"30\",\n" +
+						"                  \"tabLabel\": \"Name\",\n" +
+						"                  \"name\": \"name\",\n" +
+						"                  \"width\": \"50\",\n" +
+						"                  \"anchorString\": \"Name\",\n" +
+						"                  \"anchorYOffset\": \"-5\",\n" +
+						"                  \"value\": \"a\",\n" +
+						"                  \"required\": \"true\",\n" +
+						"                  \"height\": \"14\"\n" +
+						"                },\n" +
+						"                {\n" +
+						"                  \"anchorXOffset\": \"30\",\n" +
+						"                  \"tabLabel\": \"Email\",\n" +
+						"                  \"name\": \"email\",\n" +
+						"                  \"width\": \"50\",\n" +
+						"                  \"anchorString\": \"Email\",\n" +
+						"                  \"anchorYOffset\": \"-5\",\n" +
+						"                  \"value\": \"a@a.com\",\n" +
+						"                  \"required\": \"true\",\n" +
+						"                  \"height\": \"14\"\n" +
+						"                }\n" +
+						"              ],\n" +
+						"              \"dateTabs\": [],\n" +
+						"              \"checkboxTabs\": []\n" +
+						"            }," +
 						" \"status\": \"sent\"" +
 						" }" +
 						" ]," +
