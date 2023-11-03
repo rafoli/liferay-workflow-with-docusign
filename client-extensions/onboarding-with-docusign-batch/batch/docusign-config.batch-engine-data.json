@@ -1,0 +1,280 @@
+{
+  "actions": {
+    "createBatch": {
+      "href": "/o/headless-batch-engine/v1.0/import-task/com.liferay.object.admin.rest.dto.v1_0.ObjectDefinition",
+      "method": "POST"
+    }
+  },
+  "configuration": {
+    "className": "com.liferay.object.admin.rest.dto.v1_0.ObjectDefinition",
+    "companyId": 0,
+    "parameters": {
+      "containsHeaders": "true",
+      "createStrategy": "UPSERT",
+      "importStrategy": "ON_ERROR_FAIL",
+      "taskItemDelegateName": "DEFAULT",
+      "updateStrategy": "UPDATE"
+    },
+    "userId": 0,
+    "version": "v1.0"
+  },
+  "items": [
+    {
+      "accountEntryRestricted": false,
+      "accountEntryRestrictedObjectFieldName": "",
+      "active": false,
+      "dateCreated": "2023-03-02T21:43:03.776+00:00",
+      "dateModified": "2023-03-03T15:48:30.576+00:00",
+      "defaultLanguageId": "en_US",
+      "enableCategorization": true,
+      "enableComments": false,
+      "enableObjectEntryHistory": false,
+      "externalReferenceCode": "docuSignConfig",
+      "id": 44131,
+      "label": {
+        "en_US": "DocuSignConfig"
+      },
+      "name": "DocuSignConfig",
+      "objectActions": [],
+      "objectFields": [
+        {
+          "DBType": "String",
+          "businessType": "Text",
+          "externalReferenceCode": "84c8287b-ef18-485a-784c-3db6de27ecd6",
+          "id": 34297,
+          "indexed": false,
+          "indexedAsKeyword": false,
+          "indexedLanguageId": "",
+          "label": {
+            "en_US": "Author"
+          },
+          "listTypeDefinitionId": 0,
+          "localized": false,
+          "name": "creator",
+          "objectFieldSettings": [],
+          "readOnly": "true",
+          "readOnlyConditionExpression": "",
+          "required": false,
+          "state": false,
+          "system": true,
+          "type": "String"
+        },
+        {
+          "DBType": "Date",
+          "businessType": "Date",
+          "externalReferenceCode": "14cac35a-d007-4249-99e2-2ae119c2778e",
+          "id": 34299,
+          "indexed": false,
+          "indexedAsKeyword": false,
+          "indexedLanguageId": "",
+          "label": {
+            "en_US": "Create Date"
+          },
+          "listTypeDefinitionId": 0,
+          "localized": false,
+          "name": "createDate",
+          "objectFieldSettings": [],
+          "readOnly": "true",
+          "readOnlyConditionExpression": "",
+          "required": false,
+          "state": false,
+          "system": true,
+          "type": "Date"
+        },
+        {
+          "DBType": "String",
+          "businessType": "Text",
+          "externalReferenceCode": "8c822def-11d5-d57e-5e44-70c02ac42f56",
+          "id": 34301,
+          "indexed": false,
+          "indexedAsKeyword": false,
+          "indexedLanguageId": "",
+          "label": {
+            "en_US": "External Reference Code"
+          },
+          "listTypeDefinitionId": 0,
+          "localized": false,
+          "name": "externalReferenceCode",
+          "objectFieldSettings": [],
+          "readOnly": "false",
+          "readOnlyConditionExpression": "",
+          "required": false,
+          "state": false,
+          "system": true,
+          "type": "String"
+        },
+        {
+          "DBType": "Long",
+          "businessType": "LongInteger",
+          "externalReferenceCode": "86ac2868-c38d-b8fc-133a-929547cedde9",
+          "id": 34303,
+          "indexed": true,
+          "indexedAsKeyword": true,
+          "indexedLanguageId": "",
+          "label": {
+            "en_US": "ID"
+          },
+          "listTypeDefinitionId": 0,
+          "localized": false,
+          "name": "id",
+          "objectFieldSettings": [],
+          "readOnly": "true",
+          "readOnlyConditionExpression": "",
+          "required": false,
+          "state": false,
+          "system": true,
+          "type": "Long"
+        },
+        {
+          "DBType": "Date",
+          "businessType": "Date",
+          "externalReferenceCode": "a7860ea5-c46a-8064-3c90-c7c3db993d71",
+          "id": 34305,
+          "indexed": false,
+          "indexedAsKeyword": false,
+          "indexedLanguageId": "",
+          "label": {
+            "en_US": "Modified Date"
+          },
+          "listTypeDefinitionId": 0,
+          "localized": false,
+          "name": "modifiedDate",
+          "objectFieldSettings": [],
+          "readOnly": "true",
+          "readOnlyConditionExpression": "",
+          "required": false,
+          "state": false,
+          "system": true,
+          "type": "Date"
+        },
+        {
+          "DBType": "String",
+          "businessType": "Text",
+          "externalReferenceCode": "d2108756-f322-94fa-1855-6e41a6a3d073",
+          "id": 34307,
+          "indexed": false,
+          "indexedAsKeyword": false,
+          "indexedLanguageId": "",
+          "label": {
+            "en_US": "Status"
+          },
+          "listTypeDefinitionId": 0,
+          "localized": false,
+          "name": "status",
+          "objectFieldSettings": [],
+          "readOnly": "true",
+          "readOnlyConditionExpression": "",
+          "required": false,
+          "state": false,
+          "system": true,
+          "type": "String"
+        },
+        {
+          "DBType": "Long",
+          "businessType": "Attachment",
+          "externalReferenceCode": "4b458a48-9dd3-5b2c-63d3-66def0347023",
+          "id": 34397,
+          "indexed": true,
+          "indexedAsKeyword": false,
+          "indexedLanguageId": "en_US",
+          "label": {
+            "en_US": "DocuSign PDF Template"
+          },
+          "listTypeDefinitionId": 0,
+          "localized": false,
+          "name": "docuSignPDFTemplate",
+          "objectFieldSettings": [
+            {
+              "name": "acceptedFileExtensions",
+              "value": "pdf"
+            },
+            {
+              "name": "maximumFileSize",
+              "value": 100
+            },
+            {
+              "name": "fileSource",
+              "value": "userComputer"
+            },
+            {
+              "name": "showFilesInDocumentsAndMedia",
+              "value": false
+            }
+          ],
+          "readOnly": "false",
+          "readOnlyConditionExpression": "",
+          "required": false,
+          "state": false,
+          "system": false,
+          "type": "Long"
+        },
+        {
+          "DBType": "Clob",
+          "businessType": "LongText",
+          "externalReferenceCode": "60640059-cceb-be23-3c4a-8923574f7a87",
+          "id": 34955,
+          "indexed": true,
+          "indexedAsKeyword": false,
+          "indexedLanguageId": "en_US",
+          "label": {
+            "en_US": "DocuSign Tabs"
+          },
+          "listTypeDefinitionId": 0,
+          "localized": false,
+          "name": "docuSignTabs",
+          "objectFieldSettings": [
+            {
+              "name": "showCounter",
+              "value": false
+            }
+          ],
+          "readOnly": "false",
+          "readOnlyConditionExpression": "",
+          "required": false,
+          "state": false,
+          "system": false,
+          "type": "Clob"
+        }
+      ],
+      "objectLayouts": [
+      ],
+      "objectRelationships": [
+        {
+          "deletionType": "prevent",
+          "id": 34790,
+          "label": {
+            "en_US": "Supplier DocuSign Config"
+          },
+          "name": "supplierDocuSignConfig",
+          "objectDefinitionExternalReferenceCode1": "docuSignConfig",
+          "objectDefinitionExternalReferenceCode2": "supplier",
+          "objectDefinitionModifiable2": true,
+          "objectDefinitionName2": "Supplier",
+          "objectDefinitionSystem2": false,
+          "parameterObjectFieldId": 0,
+          "parameterObjectFieldName": "",
+          "reverse": false,
+          "system": false,
+          "type": "oneToMany"
+        }
+      ],
+      "objectViews": [
+      ],
+      "panelCategoryKey": "site_administration.content",
+      "parameterRequired": false,
+      "pluralLabel": {
+        "en_US": "DocuSignConfigs"
+      },
+      "portlet": false,
+      "restContextPath": "/o/c/docusignconfigs",
+      "scope": "site",
+      "status": {
+        "code": 0,
+        "label": "approved",
+        "label_i18n": "Approved"
+      },
+      "system": false,
+      "titleObjectFieldName": "id"
+    }
+  ]
+}
