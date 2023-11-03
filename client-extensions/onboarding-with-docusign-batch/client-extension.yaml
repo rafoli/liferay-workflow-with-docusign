@@ -6,11 +6,11 @@ onboarding-with-docusign-batch-oauth-application-headless-server:
     .serviceScheme: http
     name: Onboarding with DocuSign OAuth Application Headless Server
     scopes:
-        - Liferay.Headless.Admin.Workflow.everything
+        - Liferay.Object.Admin.REST.everything
         - Liferay.Headless.Batch.Engine.everything
     type: oAuthApplicationHeadlessServer
     userAccountScreenName: default-service-account
 onboarding-with-docusign-batch:
-    name: Liferay Sample Onboarding with DocuSign Batch
+    name: Onboarding with DocuSign Batch
     oAuthApplicationHeadlessServer: onboarding-with-docusign-batch-oauth-application-headless-server
     type: batch
