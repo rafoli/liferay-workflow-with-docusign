@@ -61,7 +61,9 @@ public class DocuSignObjectActionRestController extends BaseRestController {
 
 		docuSignConfigMono.subscribe(docuSignConfigMonoOutput -> {
 
-			_log.info("docuSignConfigJSONObject: " + docuSignConfigMonoOutput);
+			if (_log.isDebugEnabled()) {
+				_log.info("docuSignConfigJSONObject: " + docuSignConfigMonoOutput);
+			}
 
 			DocuSignConfigDTO docuSignConfig = gson.fromJson(docuSignConfigMonoOutput, DocuSignConfigDTO.class);
 			DocuSignTabsDTO docuSignTabs = gson.fromJson(docuSignConfig.getDocuSignTabs(), DocuSignTabsDTO.class);
@@ -69,8 +71,8 @@ public class DocuSignObjectActionRestController extends BaseRestController {
 			Mono<String> docuSignRequestMono = createDocuSignRequest(webClient, jwt, supplier, docuSignConfig, docuSignTabs);
 			docuSignRequestMono
 					.doOnNext(docuSignOutput -> {
-						if (_log.isInfoEnabled()) {
-							_log.info("Output of the second request: " + docuSignOutput);
+						if (_log.isDebugEnabled()) {
+							_log.debug("DocuSign request: " + docuSignOutput);
 						}
 					})
 					.subscribe();
