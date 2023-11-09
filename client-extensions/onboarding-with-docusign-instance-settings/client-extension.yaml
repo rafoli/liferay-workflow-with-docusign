@@ -1,0 +1,14 @@
+onboarding-with-docusign-digital-signature-instance-settings:
+  siteSettingsStrategy: always-inherit
+  apiUsername: YOUR_API_USERNAME
+  apiAccountId: YOUR_API_ACCOUNT_ID
+  accountBaseURI: YOUR_ACCOUNT_BASE_URI
+  integrationKey: YOUR_INTEGRATION_KEY
+  environment: sandbox
+  rsaPrivateKey: |-
+    -----BEGIN RSA PRIVATE KEY-----
+    YOUR PRIVATE KEY HERE
+    -----END RSA PRIVATE KEY-----
+  name: Onboarding with DocuSign Digital Signature Instance Settings
+  pid: com.liferay.digital.signature.configuration.DigitalSignatureConfiguration
+  type: instanceSettings
