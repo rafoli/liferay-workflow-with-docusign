@@ -1,13 +1,15 @@
-/**
- * SPDX-FileCopyrightText: (c) 2000 Liferay, Inc. https://liferay.com
- * SPDX-License-Identifier: LGPL-2.1-or-later OR LicenseRef-Liferay-DXP-EULA-2.0.0-2023-06
- */
-
 package com.liferay.sample.docusign;
 
+import com.google.gson.Gson;
+import com.liferay.sample.docusign.dto.docuSignConfig.DocuSignConfigDTO;
+import com.liferay.sample.docusign.dto.docuSignEnvelope.DSDocument;
+import com.liferay.sample.docusign.dto.docuSignEnvelope.DSRecipient;
+import com.liferay.sample.docusign.dto.docuSignEnvelope.DocuSignEnvelopeDTO;
+import com.liferay.sample.docusign.dto.docuSignTabs.DocuSignTabsDTO;
+import com.liferay.sample.docusign.dto.docuSignTabs.Tab;
+import com.liferay.sample.docusign.dto.supplier.SupplierDTO;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
-import org.json.JSONObject;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
@@ -23,6 +25,8 @@ import org.springframework.web.reactive.function.client.ExchangeFilterFunction;
 import org.springframework.web.reactive.function.client.WebClient;
 import reactor.core.publisher.Mono;
 
+import java.util.List;
+import java.util.Map;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
@@ -46,25 +50,23 @@ public class DocuSignObjectActionRestController extends BaseRestController {
 	}
 
 	public void sendDSEnvelope(Jwt jwt, String json) {
-		WebClient.Builder builder = WebClient.builder();
 		WebClient webClient = buildWebClient();
 
-		JSONObject jsonObject = new JSONObject(json);
-		int groupId = getGroupId(jsonObject);
-		String supplierEmail = getSupplierEmail(jsonObject);
-		int docuSignConfigId = getDocuSignConfigId(jsonObject);
+		Gson gson = new Gson();
+		SupplierDTO supplier = gson.fromJson(json, SupplierDTO.class);
+
+		int docuSignConfigId = Integer.parseInt(supplier.getObjectEntryDTOSupplier().getProperties().get("r_supplierDocuSignConfig_c_docuSignConfigId"));
 
 		Mono<String> docuSignConfigMono = retrieveDocuSignConfig(webClient, jwt, docuSignConfigId);
 
 		docuSignConfigMono.subscribe(docuSignConfigMonoOutput -> {
 
-			_log.info("docuSignConfigjsonObject: " + docuSignConfigMonoOutput);
+			_log.info("docuSignConfigJSONObject: " + docuSignConfigMonoOutput);
 
-			JSONObject docuSignConfigjsonObject = new JSONObject(docuSignConfigMonoOutput);
-			String docuSignTabs = getDocuSignTabs(docuSignConfigjsonObject);
-			String fileExternalReferenceCode = getFileExternalReferenceCode(docuSignConfigjsonObject);
+			DocuSignConfigDTO docuSignConfig = gson.fromJson(docuSignConfigMonoOutput, DocuSignConfigDTO.class);
+			DocuSignTabsDTO docuSignTabs = gson.fromJson(docuSignConfig.getDocuSignTabs(), DocuSignTabsDTO.class);
 
-			Mono<String> docuSignRequestMono = createDocuSignRequest(webClient, jwt, fileExternalReferenceCode, docuSignTabs, groupId, supplierEmail);
+			Mono<String> docuSignRequestMono = createDocuSignRequest(webClient, jwt, supplier, docuSignConfig, docuSignTabs);
 			docuSignRequestMono
 					.doOnNext(docuSignOutput -> {
 						if (_log.isInfoEnabled()) {
@@ -76,26 +78,19 @@ public class DocuSignObjectActionRestController extends BaseRestController {
 		);
 	}
 
-	private static String getFileExternalReferenceCode(JSONObject docuSignConfigjsonObject) {
-		JSONObject docuSignPDFTemplateJsonObject = docuSignConfigjsonObject.getJSONObject("docuSignPDFTemplate");
-		JSONObject linkJSONObject = docuSignPDFTemplateJsonObject.getJSONObject("link");
-		String href = linkJSONObject.getString("href");
-		String fileName = docuSignPDFTemplateJsonObject.getString("name");
+
+	private static String getFileExternalReferenceCode(DocuSignConfigDTO docuSignConfig) {
+		String href = docuSignConfig.getDocuSignPDFTemplate().getLink().getHref();
+		String fileName = docuSignConfig.getDocuSignPDFTemplate().getName();
 
 		String regex = "\\/documents\\/\\d+\\/\\d+\\/"+fileName+"\\/(.*)\\?version";
 		Pattern pattern = Pattern.compile(regex);
 		Matcher matcher = pattern.matcher(href);
 		if (matcher.find()) {
-			String fileExternalReferenceCode = matcher.group(1);
-			return fileExternalReferenceCode;
+            return matcher.group(1);
 		}
 
 		throw new RuntimeException("file external reference code not found in: " + href);
-	}
-
-	private static String getDocuSignTabs(JSONObject docuSignConfigjsonObject) {
-		String docuSignTabs = docuSignConfigjsonObject.getString("docuSignTabs");
-		return docuSignTabs;
 	}
 
 	private WebClient buildWebClient() {
@@ -107,71 +102,85 @@ public class DocuSignObjectActionRestController extends BaseRestController {
 				.build();
 	}
 
-	private int getGroupId(JSONObject jsonObject) {
-		JSONObject objectEntryJsonObject = jsonObject.getJSONObject("objectEntry");
-		return objectEntryJsonObject.getInt("groupId");
-	}
-
-	private String getSupplierEmail(JSONObject jsonObject) {
-		JSONObject objectEntryJsonObject = jsonObject.getJSONObject("objectEntry");
-		JSONObject objectEntryValuesJsonObject = objectEntryJsonObject.getJSONObject("values");
-		return objectEntryValuesJsonObject.getString("supplierEmail");
-	}
-
-	private int getDocuSignConfigId(JSONObject jsonObject) {
-		JSONObject objectEntryJsonObject = jsonObject.getJSONObject("objectEntry");
-		JSONObject objectEntryValuesJsonObject = objectEntryJsonObject.getJSONObject("values");
-		return objectEntryValuesJsonObject.getInt("r_supplierDocuSignConfig_c_docuSignConfigId");
-	}
-
 	private Mono<String> retrieveDocuSignConfig(WebClient webClient, Jwt jwt, int docuSignConfigId) {
 		return webClient.get()
-				.uri("o/c/docusignconfigs/" + docuSignConfigId)
+				.uri("o/c/docusignconfigs/" + docuSignConfigId + "?nestedFields=externalReferenceCode")
 				.header(HttpHeaders.AUTHORIZATION, "Bearer " + jwt.getTokenValue())
 				.exchange()
-				.flatMap(clientResponse -> handleResponse(clientResponse));
+				.flatMap(this::handleResponse);
 	}
 
-	private Mono<String> createDocuSignRequest(WebClient webClient, Jwt jwt, String fileExternalReferenceCode,  String docuSignTabs, int groupId, String supplierEmail) {
+	private Mono<String> createDocuSignRequest(WebClient webClient, Jwt jwt, SupplierDTO supplier, DocuSignConfigDTO docuSignConfig, DocuSignTabsDTO docuSignTabs) {
 
+		String fileExternalReferenceCode = getFileExternalReferenceCode(docuSignConfig);
+		long groupId = supplier.getObjectEntry().getGroupId();
+		String supplierEmail = supplier.getObjectEntryDTOSupplier().getProperties().get("supplierEmail");
+		String supplierName = supplier.getObjectEntryDTOSupplier().getProperties().get("supplierName");
+
+		_log.info("groupId: " + groupId);
 		_log.info("fileExternalReferenceCode: " + fileExternalReferenceCode);
 		_log.info("supplierEmail: " + supplierEmail);
-		_log.info("docuSignTabs: " + docuSignTabs);
 
-		String requestBody = "{ " +
-				"\"dsDocument\": [" +
-				" { " +
-				"\"fileEntryExternalReferenceCode\": \""+fileExternalReferenceCode+"\"," +
-				" \"transformPDFFields\": false," +
-				" \"fileExtension\": \"\"," +
-				" \"name\": \"Onboarding Application\"," +
-				" \"id\": \"1\"," +
-				" \"uri\": \"\"" +
-				" }" +
-				" ]," +
-				" \"dsRecipient\": [" +
-				" {" +
-				" \"emailAddress\": \""+supplierEmail+"\"," +
-				" \"name\": \"Test Test\"," +
-				" \"id\": \"1\"," +
-				" \"tabs\":" + docuSignTabs + "," +
-				" \"status\": \"sent\"" +
-				" }" +
-				" ]," +
-				" \"emailBlurb\": \"Please review and sign your submission\"," +
-				" \"emailSubject\": \"Please review and sign your submission\"," +
-				" \"name\": \"Please review and sign your submission\"," +
-				" \"status\": \"sent\"" +
-				"}";
+		// DSDocument
+		DSDocument dsDocument = new DSDocument();
+		dsDocument.setFileEntryExternalReferenceCode(fileExternalReferenceCode);
+		dsDocument.setName(docuSignConfig.getDocuSignPDFTemplate().getName());
 
-		_log.info("requestBody" + requestBody);
+		// DSRecipient
+		DSRecipient dsRecipient = new DSRecipient();
+		dsRecipient.setEmailAddress(supplierEmail);
+		dsRecipient.setName(supplierName);
+		populateDocuSignTabs(supplier, dsRecipient, docuSignTabs);
 
+		// DSEnvelope
+		DocuSignEnvelopeDTO docuSignEnvelope = new DocuSignEnvelopeDTO();
+		docuSignEnvelope.getDsDocument().add(dsDocument);
+		docuSignEnvelope.getDsRecipient().add(dsRecipient);
+		docuSignEnvelope.setEmailBlurb("Please review and sign your submission");
+		docuSignEnvelope.setEmailSubject("Please review and sign your submission");
+		docuSignEnvelope.setName("Please review and sign your submission");
+		docuSignEnvelope.setStatus("sent");
+
+		Gson gson = new Gson();
+		_log.info(gson.toJson(docuSignEnvelope));
+
+		// POST
 		return webClient.post()
 				.uri("o/digital-signature-rest/v1.0/sites/" + groupId + "/ds-envelopes")
-				.bodyValue(requestBody)
+				.bodyValue(docuSignEnvelope)
 				.header(HttpHeaders.AUTHORIZATION, "Bearer " + jwt.getTokenValue())
 				.exchange()
-				.flatMap(clientResponse -> handleResponse(clientResponse));
+				.flatMap(this::handleResponse);
+	}
+
+	private void populateDocuSignTabs(SupplierDTO supplier, DSRecipient dsRecipient, DocuSignTabsDTO docuSignTabs) {
+
+		dsRecipient.getTabs().put(
+				"signHereTabs",
+				populateDocuSignTabs(supplier, docuSignTabs.getSignHereTabs()));
+
+		dsRecipient.getTabs().put(
+				"dateTabs",
+				populateDocuSignTabs(supplier, docuSignTabs.getDateTabs()));
+
+		dsRecipient.getTabs().put(
+				"checkboxTabs",
+				populateDocuSignTabs(supplier, docuSignTabs.getCheckboxTabs()));
+
+		dsRecipient.getTabs().put(
+				"textTabs",
+				populateDocuSignTabs(supplier, docuSignTabs.getTextTabs()));
+	}
+
+	private List<Tab> populateDocuSignTabs(SupplierDTO supplier, List<Tab> tabs) {
+		for (Tab textTab : tabs){
+			Map<String, String> props = supplier.getObjectEntryDTOSupplier().getProperties();
+			if (props.containsKey(textTab.getName())){
+				textTab.setValue(props.get(textTab.getName()));
+			}
+		}
+
+		return tabs;
 	}
 
 	private Mono<String> handleResponse(ClientResponse clientResponse) {

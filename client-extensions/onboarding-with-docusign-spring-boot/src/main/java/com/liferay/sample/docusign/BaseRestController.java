@@ -9,15 +9,11 @@ import java.util.Map;
 
 import org.apache.commons.logging.Log;
 
-import org.json.JSONObject;
-
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.security.oauth2.jwt.Jwt;
 
 /**
- * @author Raymond Augé
- * @author Gregory Amerson
- * @author Brian Wing Shun Chan
+ * @author Rafael Oliveira
  */
 public abstract class BaseRestController {
 
@@ -41,9 +37,7 @@ public abstract class BaseRestController {
 	protected void log(Jwt jwt, Log log, String json) {
 		if (log.isInfoEnabled()) {
 			try {
-				JSONObject jsonObject = new JSONObject(json);
-
-				log.info("JSON: " + jsonObject.toString(4));
+				log.info("JSON: " + json);
 			}
 			catch (Exception exception) {
 				log.error("JSON: " + json, exception);
